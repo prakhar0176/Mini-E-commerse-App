@@ -19,9 +19,8 @@ class AddToCartView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         cart, _ = Cart.objects.get_or_create(user=request.user)
-        product_id = request.data.get("product")
+        product_id = request.data.get("product_id")
         quantity = int(request.data.get("quantity", 1))
-
         product = Product.objects.get(id=product_id)
 
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)

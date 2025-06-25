@@ -1,8 +1,24 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import axiosInstance from '../api/axiosInstance';
+
 
 const Cart = () => {
     const { cartItems, fetchCart, updateCart, removeFromCart } = useCart();
+    const navigate = useNavigate();
+
+    const handleCheckout = async () => {
+        try {
+            const res = await axiosInstance.post('/orders/place/');
+            alert('Order placed successfully!');
+            fetchCart(); // clear cart view
+            navigate('/order-success');
+        } catch (err) {
+            console.error(err);
+            alert('Error placing order');
+        }
+    };
 
     useEffect(() => {
         fetchCart();
@@ -27,6 +43,7 @@ const Cart = () => {
                     </div>
                 ))
             )}
+            <button onClick={handleCheckout} disabled={cartItems.length === 0}>Checkout</button>
         </div>
     );
 };
